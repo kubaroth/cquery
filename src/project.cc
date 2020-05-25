@@ -50,6 +50,10 @@ struct NormalizationCache {
   std::unordered_map<std::string, AbsolutePath> paths;
 
   AbsolutePath Get(const std::string& path) {
+    
+
+    
+  
     auto it = paths.find(path);
     if (it != paths.end())
       return it->second;
@@ -61,6 +65,8 @@ struct NormalizationCache {
     }
 
     optional<AbsolutePath> normalized = NormalizePath(path);
+    LOG_S(INFO) << "PPP:" << normalized->path;
+
     if (normalized) {
       paths[path] = *normalized;
       return *normalized;
@@ -579,7 +585,9 @@ std::vector<Project::Entry> LoadCompilationEntriesFromDirectory(
   // If there is a .cquery file always load using directory listing.
   // The .cquery file can be in the project or home dir but the project
   // dir takes precedence.
+  LOG_S(INFO) << "project dir " << project->project_dir << std::endl;
   if (FileExists(project->project_dir + ".cquery")) {
+    LOG_S(INFO)<< "AAA";
     return LoadFromDirectoryListing(project);
   }
 
@@ -602,7 +610,7 @@ std::vector<Project::Entry> LoadCompilationEntriesFromDirectory(
         return {};
     }
     comp_db_dir = tmpdir.value();
-
+    
     rapidjson::StringBuffer input;
     rapidjson::Writer<rapidjson::StringBuffer> writer(input);
     JsonWriter json_writer(&writer);
@@ -750,6 +758,8 @@ int ComputeGuessScore(const std::string& a, const std::string& b) {
 }  // namespace
 
 void Project::Load(const AbsolutePath& root_directory) {
+
+  LOG_S(INFO) << "root directory: "<< root_directory;
   // Load data.
   ProjectConfig project;
   project.extra_flags = g_config->extraClangArguments;
@@ -760,6 +770,13 @@ void Project::Load(const AbsolutePath& root_directory) {
                     ? "build"
                     : g_config->compilationDatabaseDirectory);
 
+  LOG_S(INFO) << "comp "<< g_config->compilationDatabaseDirectory.empty();
+  LOG_S(INFO) << g_config->compilationDatabaseDirectory;
+
+  // for (auto entry : entries){
+  //   LOG_S(INFO) << entry.directory << " " << entry.file; // not working
+  // }
+  
   // Cleanup / postprocess include directories.
   quote_include_directories.assign(project.quote_dirs.begin(),
                                    project.quote_dirs.end());

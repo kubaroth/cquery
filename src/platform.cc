@@ -104,6 +104,15 @@ optional<std::string> RunExecutable(const std::vector<std::string>& command,
   reproc::process process(reproc::cleanup::wait, reproc::infinite);
   std::error_code ec;
 
+  // command.insert(command.begin(), "clang");
+  std::string cmdstr = "";
+  for (auto i : command) {
+      cmdstr = cmdstr + i + ",";
+  }
+  LOG_S(INFO) << " command: " << command.size() << " " << cmdstr;;
+
+
+  
   ec = process.start(command, nullptr);
   if (ec) {
     LOG_S(ERROR) << "Error starting " << command_with_error(ec);

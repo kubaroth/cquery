@@ -615,7 +615,9 @@ struct Handler_Initialize : BaseMessageHandler<In_InitializeRequest> {
       semantic_cache->Init();
 
       // Open up / load the project.
+      LOG_S(INFO) << "+---";
       project->Load(project_path);
+      LOG_S(INFO) << "++--";
       time.ResetAndPrint("[perf] Loaded compilation entries (" +
                          std::to_string(project->entries.size()) + " files)");
 

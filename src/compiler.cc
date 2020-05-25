@@ -2,6 +2,8 @@
 
 #include "platform.h"
 #include "utils.h"
+#include <loguru.hpp>
+
 
 #include <doctest/doctest.h>
 
@@ -30,6 +32,8 @@ CompilerType FindCompilerType(const std::string& compiler_driver) {
   if (it != compiler_type_cache_.end())
     return it->second;
 
+  LOG_S(INFO) << "compiler " << compiler_driver ;
+  
   std::vector<std::string> flags = {compiler_driver};
   if (!EndsWith(compiler_driver, "cl.exe"))
     flags.push_back("--version");

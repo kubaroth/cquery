@@ -52,6 +52,19 @@ namespace {
 // https://github.com/freebsd/freebsd/blob/master/lib/libc/stdlib/realpath.c
 optional<AbsolutePath> RealPathNotExpandSymlink(std::string path,
                                                 bool ensure_exists) {
+
+
+  LOG_S(INFO)<<"before " << path;
+  auto found = path.find("-I");
+  if (found != std::string::npos) {
+    path = path.substr(found + 2, path.length());
+    // remove whitepace following -I
+    // auto end_pos = remove(path.begin(), path.end(), ' ');
+    // path.erase(end_pos, path.end());
+  }
+  LOG_S(INFO)<<"after: " << path;
+  
+    
   if (path.empty()) {
     errno = EINVAL;
     return nullopt;
